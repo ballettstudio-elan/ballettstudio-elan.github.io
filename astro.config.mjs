@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   // Adresse der fertigen Website. Nach der Veröffentlichung hier die echte Domain eintragen,
   // z. B. 'https://www.ballettstudio-elan.de'
-  site: 'https://lev333misch.github.io',
+  site: 'https://ballettstudio-elan.github.io',
 
   // Jede Seite wird als eigener Ordner erzeugt: /kontakt/ statt /kontakt.html
   trailingSlash: 'ignore',

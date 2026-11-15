@@ -1,0 +1,56 @@
+---
+// СТРАНИЦА «KONTAKT». Контактные данные – в src/data/kontakt.js.
+// Пустые данные автоматически не показываются.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import { kontakt } from '../data/kontakt.js';
+
+const hatKontakt = kontakt.telefon || kontakt.email || kontakt.strasse;
+---
+<BaseLayout title="Kontakt">
+  <PageHero eyebrow="Wir freuen uns auf Sie" title="Kontakt" lead="Sie haben eine Frage zum Unterricht? Schreiben Sie uns – wir melden uns persönlich bei Ihnen." />
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="split" style="align-items:start">
+        <div class="split-text">
+          {hatKontakt && (
+            <div class="info-grid" style="width:100%;grid-template-columns:1fr">
+              {kontakt.telefon && (
+                <div class="info-card">
+                  <h3>Telefon</h3>
+                  <p><a href={`tel:${kontakt.telefonLink}`}>{kontakt.telefon}</a></p>
+                </div>
+              )}
+              {kontakt.email && (
+                <div class="info-card">
+                  <h3>E-Mail</h3>
+                  <p><a href={`mailto:${kontakt.email}`}>{kontakt.email}</a></p>
+                </div>
+              )}
+              {kontakt.strasse && (
+                <div class="info-card">
+                  <h3>Adresse</h3>
+                  <p>{kontakt.strasse}<br />{kontakt.plzOrt}</p>
+                </div>
+              )}
+            </div>
+          )}
+          {kontakt.hinweis && <p class="note">{kontakt.hinweis}</p>}
+
+          <div class="info-card" style="width:100%;background:var(--blush);border-color:transparent">
+            <h3>Probestunde gewünscht?</h3>
+            <p>Für eine Probestunde nutzen Sie bitte unser Anfrageformular.</p>
+            <p style="margin-top:.8rem"><a class="btn btn-small" href="/probestunde/">Probestunde anfragen</a></p>
+          </div>
+        </div>
+
+        <div>
+          <h2 style="font-size:2rem;margin-bottom:1.2rem">Ihre Nachricht</h2>
+          <AnfrageForm modus="frage" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

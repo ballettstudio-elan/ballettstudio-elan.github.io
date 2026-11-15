@@ -1,0 +1,43 @@
+---
+// Подвал сайта. Контакты берутся из src/data/kontakt.js.
+import { navigation, studio } from '../data/studio.js';
+import { kontakt } from '../data/kontakt.js';
+
+const jahr = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand">{studio.name}</p>
+        <p style="margin-top:1rem;max-width:28em">Ballettunterricht für Kinder ab 5 Jahren – seit über 20 Jahren.</p>
+      </div>
+
+      <nav aria-label="Fußzeilen-Navigation">
+        <h2>Seiten</h2>
+        <ul>
+          {navigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href="/probestunde/">Probestunde anfragen</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <h2>Kontakt</h2>
+        <ul>
+          {kontakt.telefon && <li><a href={`tel:${kontakt.telefonLink}`}>{kontakt.telefon}</a></li>}
+          {kontakt.email && <li><a href={`mailto:${kontakt.email}`}>{kontakt.email}</a></li>}
+          {kontakt.strasse && <li>{kontakt.strasse}<br />{kontakt.plzOrt}</li>}
+          <li><a href="/kontakt/">Nachricht schreiben</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {jahr} {studio.name}</p>
+      <ul>
+        <li><a href="/impressum/">Impressum</a></li>
+        <li><a href="/datenschutz/">Datenschutz</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

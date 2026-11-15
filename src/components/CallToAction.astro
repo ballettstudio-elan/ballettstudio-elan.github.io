@@ -1,0 +1,16 @@
+---
+// Блок «Записаться на пробное занятие». Тексты – в src/data/studio.js (aufruf).
+import { aufruf } from '../data/studio.js';
+---
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <p class="eyebrow">Probestunde</p>
+      <h2>{aufruf.titel}</h2>
+      <p>{aufruf.text}</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn-light" href="/probestunde/">{aufruf.knopf} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,102 @@
+---
+// СТАРТОВАЯ СТРАНИЦА. Тексты – в src/data/studio.js (раздел startseite).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import TeacherCard from '../components/TeacherCard.astro';
+import Gallery from '../components/Gallery.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { studio, startseite } from '../data/studio.js';
+import { sichtbareLehrkraefte } from '../data/lehrkraefte.js';
+
+const { hero, vorteile, unterrichtTeaser, lehrkraefteTeaser, galerieTeaser } = startseite;
+---
+<BaseLayout>
+  <!-- Первый экран -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow fade-up">{hero.oberzeile}</p>
+        <p class="hero-brand fade-up d1">{studio.name}</p>
+        <h1 class="fade-up d1">{hero.titel}</h1>
+        <p class="lead fade-up d2">{hero.text}</p>
+        <div class="btn-row fade-up d3">
+          <a class="btn" href="/probestunde/">{hero.knopfHaupt} <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-outline" href="/ueber-uns/">{hero.knopfZweit}</a>
+        </div>
+      </div>
+      <div class="hero-art fade-up d2">
+        <div class="hero-art-frame">
+          <img src={hero.bild} alt={hero.bildAlt} width="869" height="1280" fetchpriority="high" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Преимущества -->
+  <section class="section section-blush">
+    <div class="container">
+      <div class="section-head center reveal">
+        <p class="eyebrow">Ballettstudio „Elan“</p>
+      </div>
+      <div class="features">
+        {vorteile.liste.map((v) => (
+          <article class="feature reveal">
+            <span class="feature-icon"><Icon name={v.icon} /></span>
+            <h3>{v.titel}</h3>
+            <p>{v.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Unterricht -->
+  <section class="section">
+    <div class="container split">
+      <div class="split-text reveal">
+        <p class="eyebrow">{unterrichtTeaser.oberzeile}</p>
+        <h2>{unterrichtTeaser.titel}</h2>
+        <p>{unterrichtTeaser.text}</p>
+        <a class="btn btn-outline" href="/unterricht/">{unterrichtTeaser.knopf} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="photo-frame reveal">
+        <img src="/images/galerie/gruppe-rosa-tutus.jpg" alt="Kindergruppe in rosa Tutus mit ihrer Lehrerin" loading="lazy" width="1280" height="1153" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Lehrkräfte -->
+  {sichtbareLehrkraefte.length > 0 && (
+    <section class="section section-blush">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">{lehrkraefteTeaser.oberzeile}</p>
+          <h2>{lehrkraefteTeaser.titel}</h2>
+          <p class="lead">{lehrkraefteTeaser.text}</p>
+        </div>
+        <div class:list={['teachers', { single: sichtbareLehrkraefte.length === 1 }]}>
+          {sichtbareLehrkraefte.map((l) => <TeacherCard lehrkraft={l} />)}
+        </div>
+        <p style="text-align:center;margin-top:2.5rem">
+          <a class="btn btn-outline" href="/lehrkraefte/">{lehrkraefteTeaser.knopf}</a>
+        </p>
+      </div>
+    </section>
+  )}
+
+  <!-- Galerie -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center reveal">
+        <p class="eyebrow">{galerieTeaser.oberzeile}</p>
+        <h2>{galerieTeaser.titel}</h2>
+      </div>
+      <Gallery limit={6} compact />
+      <p style="text-align:center;margin-top:2rem">
+        <a class="btn btn-outline" href="/galerie/">{galerieTeaser.knopf} <span class="arrow" aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </section>
+
+  <CallToAction />
+</BaseLayout>

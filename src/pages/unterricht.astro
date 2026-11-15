@@ -1,0 +1,91 @@
+---
+// СТРАНИЦА «UNTERRICHT». Данные – в src/data/unterricht.js.
+// Группы и расписание появятся автоматически, когда их заполнят в том файле.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { unterrichtSeite, altersgruppen, stundenplan, preiseHinweis } from '../data/unterricht.js';
+---
+<BaseLayout title={unterrichtSeite.titel}>
+  <PageHero eyebrow="Ballett für Kinder" title={unterrichtSeite.titel} lead={unterrichtSeite.einleitung} />
+
+  <section class="section" style="padding-top:1rem">
+    <div class="container">
+      <div class="info-grid">
+        {unterrichtSeite.merkmale.map((m) => (
+          <article class="info-card reveal">
+            <h3>{m.titel}</h3>
+            <p>{m.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {altersgruppen.length > 0 && (
+    <section class="section section-blush">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Gruppen</p>
+          <h2>Unsere Altersgruppen</h2>
+        </div>
+        <div class="info-grid">
+          {altersgruppen.map((g) => (
+            <article class="info-card reveal">
+              {g.alter && <p class="teacher-role">{g.alter}</p>}
+              <h3>{g.name}</h3>
+              {g.text && <p>{g.text}</p>}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class:list={['section', { 'section-blush': altersgruppen.length === 0 }]}>
+    <div class="container-narrow">
+      <div class="section-head center reveal">
+        <p class="eyebrow">Zeiten & Preise</p>
+        <h2>Unterrichtszeiten</h2>
+      </div>
+      {stundenplan.length > 0 ? (
+        <div class="info-card reveal">
+          <ul style="display:grid;gap:.6rem">
+            {stundenplan.map((s) => (
+              <li style="display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--line);padding-bottom:.6rem">
+                <span><strong style="font-weight:500;color:var(--ink)">{s.tag}</strong>{s.gruppe && ` · ${s.gruppe}`}</span>
+                <span>{s.zeit}</span>
+              </li>
+            ))}
+          </ul>
+          <p style="margin-top:1rem">{preiseHinweis}</p>
+        </div>
+      ) : (
+        <p class="note reveal" style="text-align:left">{preiseHinweis}</p>
+      )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center reveal">
+        <p class="eyebrow">Anmeldung</p>
+        <h2>So einfach geht’s</h2>
+      </div>
+      <ol class="steps">
+        {unterrichtSeite.ablauf.map((s) => (
+          <li class="step reveal">
+            <h3>{s.titel}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="btn-row" style="justify-content:center;margin-top:2.5rem">
+        <a class="btn" href="/probestunde/">Probestunde anfragen <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn-outline" href="/probestunde/">Probestunde anfragen</a>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</BaseLayout>

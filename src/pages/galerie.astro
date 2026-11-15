@@ -1,0 +1,16 @@
+---
+// СТРАНИЦА «GALERIE». Список фото – в src/data/galerie.js.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import CallToAction from '../components/CallToAction.astro';
+---
+<BaseLayout title="Galerie">
+  <PageHero eyebrow="Einblicke" title="Galerie" lead="Momente aus dem Unterricht, von Festen und besonderen Tagen im Studio." />
+  <section class="section" style="padding-top:1rem">
+    <div class="container">
+      <Gallery />
+    </div>
+  </section>
+  <CallToAction />
+</BaseLayout>

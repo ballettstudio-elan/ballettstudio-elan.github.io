@@ -1,0 +1,8 @@
+---
+// Небольшой декоративный разделитель (линия с ромбом)
+const { class: className = '' } = Astro.props;
+---
+<svg class:list={['ornament', className]} viewBox="0 0 90 14" fill="none" aria-hidden="true">
+  <path d="M0 7h36M54 7h36" stroke="currentColor" stroke-width="1" />
+  <path d="M45 1l6 6-6 6-6-6z" stroke="currentColor" stroke-width="1" />
+</svg>

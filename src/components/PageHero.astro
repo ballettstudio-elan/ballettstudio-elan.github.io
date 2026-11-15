@@ -1,0 +1,13 @@
+---
+// Заголовок вверху внутренних страниц (Über uns, Galerie ...)
+import Ornament from './Ornament.astro';
+const { eyebrow, title, lead } = Astro.props;
+---
+<section class="page-hero">
+  <div class="container-narrow">
+    {eyebrow && <p class="eyebrow fade-up">{eyebrow}</p>}
+    <h1 class="fade-up d1">{title}</h1>
+    <Ornament class="fade-up d2" />
+    {lead && <p class="lead fade-up d3">{lead}</p>}
+  </div>
+</section>

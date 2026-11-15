@@ -1,0 +1,22 @@
+{
+  "name": "balletstudio-elan-2",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Website der BalletStudio „Elan“ mit Online-Anfrage und Admin-Bereich",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:db": "node tests/datenbank-test.mjs supabase/migrations/001_anfragen.sql"
+  },
+  "dependencies": {
+    "@fontsource-variable/jost": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.3.16"
+  }
+}

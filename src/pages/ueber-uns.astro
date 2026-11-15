@@ -1,0 +1,51 @@
+---
+// СТРАНИЦА «ÜBER UNS». Тексты – в src/data/studio.js (раздел ueberUns).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { ueberUns } from '../data/studio.js';
+---
+<BaseLayout title={ueberUns.titel}>
+  <PageHero eyebrow="Seit über 20 Jahren" title={ueberUns.titel} lead={ueberUns.einleitung} />
+
+  {ueberUns.hinweis && (
+    <section style="padding-bottom:3rem">
+      <div class="container-narrow">
+        <aside class="hinweis reveal" aria-label="Hinweis">
+          <span class="hinweis-icon" aria-hidden="true">i</span>
+          <div>
+            <p class="hinweis-titel">Hinweis</p>
+            <p>{ueberUns.hinweis}</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  )}
+
+  {ueberUns.bloecke.map((block, i) => (
+    <section class:list={['section', { 'section-blush': i % 2 === 1 }]} style={i === 0 ? 'padding-top:1rem' : undefined}>
+      <div class:list={['container', block.bild ? 'split' : 'container-narrow', { reverse: i % 2 === 1 }]}>
+        <div class="split-text reveal">
+          <h2>{block.titel}</h2>
+          {block.absaetze.map((p) => <p>{p}</p>)}
+        </div>
+        {block.bild && (
+          <div class="photo-frame reveal">
+            <img src={block.bild} alt={block.bildAlt} loading="lazy" />
+          </div>
+        )}
+      </div>
+    </section>
+  ))}
+
+  <section class="section" style="padding-top:0">
+    <div class="container" style="text-align:center">
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn-outline" href="/unterricht/">Zum Unterricht</a>
+        <a class="btn btn-outline" href="/lehrkraefte/">Unsere Lehrkräfte</a>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</BaseLayout>

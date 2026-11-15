@@ -1,0 +1,23 @@
+---
+// СТРАНИЦА «LEHRKRÄFTE». Данные преподавателей – в src/data/lehrkraefte.js.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import TeacherCard from '../components/TeacherCard.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { sichtbareLehrkraefte } from '../data/lehrkraefte.js';
+---
+<BaseLayout title="Lehrkräfte">
+  <PageHero
+    eyebrow="Unser Team"
+    title="Lehrkräfte"
+    lead="Bei uns unterrichten zwei erfahrene Lehrkräfte mit fundierten tänzerischen Kenntnissen."
+  />
+  <section class="section" style="padding-top:1rem">
+    <div class="container">
+      <div class:list={['teachers', { single: sichtbareLehrkraefte.length === 1 }]}>
+        {sichtbareLehrkraefte.map((l) => <TeacherCard lehrkraft={l} />)}
+      </div>
+    </div>
+  </section>
+  <CallToAction />
+</BaseLayout>

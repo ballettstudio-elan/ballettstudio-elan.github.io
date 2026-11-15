@@ -1,0 +1,25 @@
+---
+// Карточка одного преподавателя. Данные – в src/data/lehrkraefte.js.
+// Блоки (Ausbildung, Erfahrung ...) выводятся автоматически из списка "abschnitte".
+const { lehrkraft } = Astro.props;
+// Инициалы для заглушки без фото (только буквы, например «OB»)
+const initialen = (lehrkraft.name.match(/\p{L}+/gu) ?? []).map((t) => t[0]).join('').slice(0, 2);
+---
+<article class="teacher reveal">
+  <div class="teacher-photo">
+    {lehrkraft.foto
+      ? <img src={lehrkraft.foto} alt={lehrkraft.fotoAlt || `Foto von ${lehrkraft.name}`} loading="lazy" />
+      : <div class="teacher-initials" aria-hidden="true">{initialen}</div>}
+  </div>
+  <div class="teacher-body">
+    {lehrkraft.rolle && <p class="teacher-role">{lehrkraft.rolle}</p>}
+    <h3 class="teacher-name">{lehrkraft.name}</h3>
+    {lehrkraft.kurztext && <p class="teacher-section"><span style="color:var(--ink-soft)">{lehrkraft.kurztext}</span></p>}
+    {lehrkraft.abschnitte?.map((a) => (
+      <div class="teacher-section">
+        <h4>{a.titel}</h4>
+        <p>{a.text}</p>
+      </div>
+    ))}
+  </div>
+</article>

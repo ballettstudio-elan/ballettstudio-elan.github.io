@@ -1,0 +1,293 @@
+---
+// Форма заявки. Используется на двух страницах:
+//   modus="buchung" – запись на занятие (страница /probestunde/)
+//   modus="frage"   – вопрос (страница /kontakt/)
+// Заявка сохраняется в Supabase через защищённую функцию anfrage_senden.
+// Типы заявок и возрастные группы – в src/data/unterricht.js.
+import { anfrageTypen, altersgruppen } from '../data/unterricht.js';
+const { modus = 'buchung' } = Astro.props;
+const buchung = modus === 'buchung';
+const id = (name) => `${modus}-${name}`;
+---
+<div class="form-card" data-anfrage-form data-modus={modus}>
+  <form class="form" novalidate>
+    <div class="alert alert-error" role="alert" hidden data-form-error></div>
+
+    {/* Если тип заявки один (сейчас только Probestunde) – выбор не показывается */}
+    {buchung && anfrageTypen.length === 1 && (
+      <input type="radio" name="typ" value={anfrageTypen[0].value} checked hidden />
+    )}
+    {buchung && anfrageTypen.length > 1 && (
+      <fieldset class="field">
+        <legend>Art der Anfrage</legend>
+        <div class="choice-group" style="margin-top:.45rem">
+          {anfrageTypen.map((t, i) => (
+            <label class="choice">
+              <input type="radio" name="typ" value={t.value} checked={i === 0} />
+              <span class="choice-box"><strong>{t.label}</strong><span>{t.text}</span></span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    )}
+
+    {buchung && (
+      <div class="form-row">
+        {altersgruppen.length > 0 && (
+          <div class="field">
+            <label for={id('gruppe')}>Altersgruppe</label>
+            <select class="input" id={id('gruppe')} name="altersgruppe" required>
+              <option value="">Bitte wählen</option>
+              {altersgruppen.map((g) => <option value={g.name}>{g.name}{g.alter ? ` (${g.alter})` : ''}</option>)}
+              <option value="Weiß ich nicht">Weiß ich nicht</option>
+            </select>
+            <p class="field-error" data-error-for="altersgruppe"></p>
+          </div>
+        )}
+        <div class="field">
+          <label for={id('alter')}>Alter des Kindes</label>
+          <input class="input" id={id('alter')} name="alter_kind" type="number" inputmode="numeric" min="2" max="99" placeholder="z. B. 5" required />
+          <p class="field-error" data-error-for="alter_kind"></p>
+        </div>
+      </div>
+    )}
+
+    {buchung && (
+      <div class="form-row">
+        <div class="field">
+          <label for={id('datum')}>Wunschdatum<span class="req" aria-hidden="true">*</span></label>
+          <input class="input" id={id('datum')} name="wunschdatum" type="date" />
+          <p class="field-error" data-error-for="wunschdatum"></p>
+        </div>
+        <div class="field">
+          <label for={id('zeit')}>Wunschzeit<span class="req" aria-hidden="true">*</span></label>
+          <input class="input" id={id('zeit')} name="wunschzeit" type="text" maxlength="100" placeholder="z. B. nachmittags, ab 16 Uhr" />
+        </div>
+      </div>
+    )}
+    {buchung && <p class="hint" style="margin-top:-.6rem;font-size:.87rem;color:var(--ink-soft)">Wir prüfen Ihren Wunsch und melden uns mit einem passenden Termin. Der Termin gilt erst nach unserer Bestätigung.</p>}
+
+    <div class="field">
+      <label for={id('name')}>Ihr Name</label>
+      <input class="input" id={id('name')} name="name" type="text" autocomplete="name" maxlength="100" required />
+      <p class="field-error" data-error-for="name"></p>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for={id('email')}>E-Mail</label>
+        <input class="input" id={id('email')} name="email" type="email" autocomplete="email" maxlength="200" />
+        <p class="field-error" data-error-for="email"></p>
+      </div>
+      <div class="field">
+        <label for={id('telefon')}>Telefon</label>
+        <input class="input" id={id('telefon')} name="telefon" type="tel" autocomplete="tel" maxlength="30" />
+        <p class="field-error" data-error-for="telefon"></p>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:-.6rem;font-size:.87rem;color:var(--ink-soft)">Bitte mindestens E-Mail oder Telefon angeben.</p>
+
+    <div class="field">
+      <label for={id('nachricht')}>
+        {buchung ? <>Nachricht<span class="req" aria-hidden="true">*</span></> : 'Ihre Frage'}
+      </label>
+      <textarea class="input" id={id('nachricht')} name="nachricht" maxlength="2000"
+        placeholder={buchung ? 'Möchten Sie uns noch etwas mitteilen?' : 'Wie können wir Ihnen helfen?'}></textarea>
+      <p class="field-error" data-error-for="nachricht"></p>
+    </div>
+
+    <!-- Ловушка для спам-ботов: человек это поле не видит -->
+    <div class="honeypot" aria-hidden="true">
+      <label for={id('website')}>Website</label>
+      <input id={id('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="field">
+      <label class="check">
+        <input type="checkbox" name="datenschutz" required />
+        <span>Ich habe die <a href="/datenschutz/#formular" target="_blank" rel="noopener">Datenschutzhinweise</a> gelesen.</span>
+      </label>
+      <p class="field-error" data-error-for="datenschutz"></p>
+    </div>
+
+    <p class="hint" style="margin:0;font-size:.87rem;color:var(--ink-soft)"><span class="req" aria-hidden="true" style="margin:0 .25em 0 0">*</span>Freiwillige Angabe</p>
+
+    <div>
+      <button class="btn" type="submit" data-submit>
+        <span class="spinner" aria-hidden="true"></span>
+        <span data-submit-label>{buchung ? 'Anfrage senden' : 'Nachricht senden'}</span>
+      </button>
+    </div>
+  </form>
+
+  <div class="success" hidden tabindex="-1" data-success>
+    <div class="success-icon" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h2 style="font-size:2.2rem">Vielen Dank!</h2>
+    <p class="lead" style="margin-inline:auto">
+      {buchung
+        ? 'Ihre Anfrage ist bei uns eingegangen. Wir melden uns so bald wie möglich bei Ihnen. Bitte beachten Sie: Der Termin ist erst fest vereinbart, wenn wir ihn Ihnen bestätigt haben.'
+        : 'Ihre Nachricht ist bei uns eingegangen. Wir melden uns so bald wie möglich bei Ihnen.'}
+    </p>
+    <button class="btn btn-outline" type="button" data-again>Weitere Anfrage senden</button>
+  </div>
+</div>
+
+<script>
+  import { supabase, supabaseKonfiguriert } from '../lib/supabase.js';
+  import { fehlerText } from '../lib/anfrage-fehler.js';
+
+  const TIMEOUT_MS = 15000;
+  const emailOk = (v) => /^[^@\s<>]+@[^@\s<>]+\.[^@\s<>]{2,}$/.test(v);
+  const telefonOk = (v) => /^\+?[0-9 ()/\-]{6,30}$/.test(v);
+  const heute = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const neuerToken = () =>
+    crypto.randomUUID ? crypto.randomUUID()
+      : '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
+          (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+
+  document.querySelectorAll('[data-anfrage-form]').forEach((root) => {
+    const form = root.querySelector('form');
+    const modus = root.dataset.modus;
+    const errorBox = root.querySelector('[data-form-error]');
+    const submit = root.querySelector('[data-submit]');
+    const success = root.querySelector('[data-success]');
+    let token = neuerToken();
+    let startZeit = Date.now();
+    let sendet = false;
+
+    // Тип заявки из адреса страницы: /probestunde/?typ=unterricht
+    const typParam = new URLSearchParams(location.search).get('typ');
+    const typRadio = typParam && form.querySelector(`input[name="typ"][value="${CSS.escape(typParam)}"]`);
+    if (typRadio) typRadio.checked = true;
+
+    const datum = form.elements.namedItem('wunschdatum');
+    if (datum) datum.min = heute();
+
+    if (!supabaseKonfiguriert) {
+      zeigeFehler('Die Online-Anfrage ist im Moment leider nicht verfügbar. Bitte versuchen Sie es später erneut.', 'Hinweis: ');
+      submit.disabled = true;
+    }
+
+    function zeigeFehler(text, titel = 'Nicht gesendet. ') {
+      errorBox.innerHTML = '';
+      const s = document.createElement('strong');
+      s.textContent = titel;
+      errorBox.append(s, document.createTextNode(text));
+      errorBox.hidden = false;
+    }
+    function feldFehler(name, text) {
+      const el = form.querySelector(`[data-error-for="${name}"]`);
+      const input = form.elements.namedItem(name);
+      if (el) el.textContent = (text || '').trim();
+      if (input && input.setAttribute) input.setAttribute('aria-invalid', text ? 'true' : 'false');
+    }
+    function prueffen(d) {
+      const fehler = {};
+      if (d.name.length < 2) fehler.name = 'Bitte geben Sie Ihren Namen an.';
+      if (!d.email && !d.telefon) {
+        fehler.email = 'Bitte E-Mail oder Telefon angeben.';
+        fehler.telefon = ' ';
+      }
+      if (d.email && !emailOk(d.email)) fehler.email = 'Bitte prüfen Sie die E-Mail-Adresse.';
+      if (d.telefon && !telefonOk(d.telefon)) fehler.telefon = 'Bitte prüfen Sie die Telefonnummer.';
+      if (modus !== 'frage' && form.elements.namedItem('altersgruppe') && !d.altersgruppe)
+        fehler.altersgruppe = 'Bitte wählen Sie eine Altersgruppe.';
+      if (modus !== 'frage' && d.alter_kind === null)
+        fehler.alter_kind = 'Bitte geben Sie das Alter des Kindes an.';
+      else if (d.alter_kind !== null && (!Number.isInteger(d.alter_kind) || d.alter_kind < 2 || d.alter_kind > 99))
+        fehler.alter_kind = 'Bitte ein Alter zwischen 2 und 99 angeben.';
+      if (d.wunschdatum && d.wunschdatum < heute()) fehler.wunschdatum = 'Bitte ein Datum ab heute wählen.';
+      if (modus === 'frage' && !d.nachricht) fehler.nachricht = 'Bitte schreiben Sie uns Ihre Frage.';
+      if (!d.datenschutz) fehler.datenschutz = 'Bitte bestätigen Sie die Datenschutzhinweise.';
+      return fehler;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (sendet || !supabaseKonfiguriert) return;   // защита от двойного нажатия
+      errorBox.hidden = true;
+
+      const f = form.elements;
+      const wert = (n) => (f.namedItem(n)?.value ?? '').trim();
+      const alterRoh = wert('alter_kind');
+      const daten = {
+        typ: modus === 'frage' ? 'frage' : (form.querySelector('input[name="typ"]:checked')?.value ?? ''),
+        name: wert('name'),
+        email: wert('email'),
+        telefon: wert('telefon'),
+        altersgruppe: wert('altersgruppe'),
+        alter_kind: alterRoh === '' ? null : Number(alterRoh),
+        wunschdatum: wert('wunschdatum'),
+        wunschzeit: wert('wunschzeit'),
+        nachricht: wert('nachricht'),
+        datenschutz: f.namedItem('datenschutz').checked,
+      };
+
+      ['name', 'email', 'telefon', 'altersgruppe', 'alter_kind', 'wunschdatum', 'nachricht', 'datenschutz'].forEach((n) => feldFehler(n, ''));
+      const fehler = prueffen(daten);
+      if (Object.keys(fehler).length) {
+        Object.entries(fehler).forEach(([n, t]) => feldFehler(n, t));
+        const erstes = form.querySelector('[aria-invalid="true"]');
+        erstes?.focus();
+        zeigeFehler('Bitte prüfen Sie die markierten Felder.');
+        return;
+      }
+
+      sendet = true;
+      submit.disabled = true;
+      submit.classList.add('is-loading');
+      submit.querySelector('[data-submit-label]').textContent = 'Wird gesendet …';
+
+      try {
+        const anfrage = supabase.rpc('anfrage_senden', {
+          p_client_token: token,
+          p_typ: daten.typ,
+          p_name: daten.name,
+          p_email: daten.email || null,
+          p_telefon: daten.telefon || null,
+          p_altersgruppe: daten.altersgruppe || null,
+          p_alter_kind: daten.alter_kind,
+          p_wunschdatum: daten.wunschdatum || null,
+          p_wunschzeit: daten.wunschzeit || null,
+          p_nachricht: daten.nachricht || null,
+          p_datenschutz: daten.datenschutz,
+          p_website: wert('website'),
+          p_ausfuellzeit: Date.now() - startZeit,
+        });
+        const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS));
+        const { data, error } = await Promise.race([anfrage, timeout]);
+
+        // Успех показываем ТОЛЬКО если база вернула номер сохранённой заявки
+        if (error || typeof data !== 'string' || !data) throw error ?? new Error('keine Antwort');
+
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        zeigeFehler(fehlerText(err));
+        errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } finally {
+        sendet = false;
+        submit.disabled = false;
+        submit.classList.remove('is-loading');
+        submit.querySelector('[data-submit-label]').textContent = modus === 'frage' ? 'Nachricht senden' : 'Anfrage senden';
+      }
+    });
+
+    root.querySelector('[data-again]').addEventListener('click', () => {
+      form.reset();
+      if (typRadio) typRadio.checked = true;
+      token = neuerToken();
+      startZeit = Date.now();
+      success.hidden = true;
+      form.hidden = false;
+      form.querySelector('input:not([type=radio]):not([type=hidden])')?.focus();
+    });
+  });
+</script>

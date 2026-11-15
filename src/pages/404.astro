@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+<BaseLayout title="Seite nicht gefunden" noindex>
+  <PageHero eyebrow="Fehler 404" title="Seite nicht gefunden" lead="Diese Seite gibt es leider nicht (mehr)." />
+  <section class="section" style="padding-top:0;text-align:center">
+    <a class="btn" href="/">Zur Startseite</a>
+  </section>
+</BaseLayout>

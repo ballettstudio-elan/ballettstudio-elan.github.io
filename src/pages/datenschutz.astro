@@ -1,0 +1,81 @@
+---
+// DATENSCHUTZERKLÄRUNG (ENTWURF). Данные – в src/data/rechtliches.js.
+// Это заготовка, описывающая, как на самом деле работает этот сайт.
+// Перед публикацией текст должен проверить специалист (см. LEGAL_CHECKLIST.md).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Feld from '../components/Feld.astro';
+import { rechtliches as r } from '../data/rechtliches.js';
+import { kontakt } from '../data/kontakt.js';
+---
+<BaseLayout title="Datenschutzerklärung" noindex={r.entwurf}>
+  <!-- ­ = место, где длинное слово может переноситься на телефоне -->
+  <PageHero title={'Datenschutz­erklärung'} />
+  <section class="section" style="padding-top:0">
+    <div class="container-narrow legal">
+      {r.entwurf && (
+        <p class="draft-banner"><strong>Entwurf:</strong> Dieser Text ist eine Vorlage und muss vor der Veröffentlichung vervollständigt und rechtlich geprüft werden.</p>
+      )}
+
+      <div>
+        <h2>1. Verantwortliche Stelle</h2>
+        <p>
+          <Feld wert={r.betreiber} label="Name" /><br />
+          <Feld wert={r.strasse} label="Straße und Hausnummer" /><br />
+          <Feld wert={r.plzOrt} label="PLZ und Ort" /><br />
+          E-Mail: <Feld wert={kontakt.email} label="E-Mail-Adresse" />
+        </p>
+      </div>
+
+      <div>
+        <h2>2. Hosting und Server-Logfiles</h2>
+        <p>Diese Website wird bei GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA, gehostet (GitHub Pages).</p>
+        <p>Beim Aufruf der Website verarbeitet der Hosting-Anbieter technisch notwendige Daten in sogenannten Server-Logfiles, z. B. IP-Adresse, Datum und Uhrzeit des Abrufs, aufgerufene Seite, Browsertyp und Betriebssystem. Diese Daten werden benötigt, um die Website auszuliefern und die Sicherheit des Betriebs zu gewährleisten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse). Da GitHub seinen Sitz in den USA hat, kann eine Übermittlung von Daten in die USA stattfinden. GitHub ist unter dem EU-U.S. Data Privacy Framework zertifiziert; die Übermittlung stützt sich daher auf den Angemessenheitsbeschluss der EU-Kommission (Art. 45 DSGVO).</p>
+      </div>
+
+      <div id="formular">
+        <h2>3. Anfrage- und Kontaktformular</h2>
+        <p>Wenn Sie uns über das Formular eine Anfrage (Probestunde oder allgemeine Frage) senden, verarbeiten wir folgende Angaben:</p>
+        <ul>
+          <li>Art der Anfrage (Probestunde oder Frage)</li>
+          <li>Ihr Name</li>
+          <li>E-Mail-Adresse und/oder Telefonnummer</li>
+          <li>bei einer Probestunde zusätzlich erforderlich: Altersgruppe und Alter des Kindes</li>
+          <li>freiwillig: Wunschdatum, Wunschzeit und Nachricht</li>
+          <li>Zeitpunkt der Anfrage und Ihrer Bestätigung dieser Datenschutzhinweise</li>
+        </ul>
+        <p>Zweck: Bearbeitung Ihrer Anfrage und Vereinbarung eines Probetermins bzw. Beantwortung Ihrer Frage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Maßnahmen auf Ihre Anfrage hin) bzw. Art. 6 Abs. 1 lit. f DSGVO (Beantwortung Ihrer Frage).</p>
+        <p>Die Angabe Ihres Namens und einer Kontaktmöglichkeit (E-Mail-Adresse oder Telefonnummer) ist erforderlich, damit wir Ihre Anfrage beantworten können. Bei einer Probestunde benötigen wir außerdem Altersgruppe und Alter des Kindes, um einen passenden Termin zu finden. Alle weiteren Angaben sind freiwillig. Ohne die erforderlichen Angaben können wir Ihre Anfrage nicht bearbeiten.</p>
+        <p>Das Formular richtet sich an Erwachsene (Eltern bzw. Sorgeberechtigte). Angaben zu Ihrem Kind beschränken sich auf Alter und Altersgruppe.</p>
+        <p>Bitte geben Sie im Nachrichtenfeld keine Gesundheitsdaten oder andere besonders sensible Informationen an.</p>
+        <p>Die Angaben werden in einer Datenbank des Dienstes Supabase (Supabase Inc.) gespeichert. Serverstandort: <Feld wert={r.supabaseRegion} label="Region des Supabase-Projekts" />. Mit Supabase besteht ein Vertrag zur Auftragsverarbeitung (Data Processing Addendum, Bestandteil der Nutzungsbedingungen). Da Supabase seinen Sitz in den USA hat, kann ein Zugriff aus den USA erfolgen; für diese Übermittlung werden Standardvertragsklauseln verwendet.</p>
+        <p>Erst beim Absenden des Formulars verbindet sich Ihr Browser direkt mit den Servern von Supabase; dabei wird technisch bedingt Ihre IP-Adresse übertragen. Beim bloßen Aufruf unserer Seiten findet keine Verbindung zu Supabase statt.</p>
+        <p>Zugriff auf die Anfragen hat ausschließlich die Studioleitung über einen passwortgeschützten Bereich. Zum Schutz vor Spam prüft das Formular automatisch, ob es von einem Menschen ausgefüllt wurde (verstecktes Feld, Ausfüllzeit, Anzahl der Anfragen). Dafür werden keine weiteren Daten über Sie gespeichert.</p>
+        <p>Speicherdauer: <Feld wert={r.loeschfrist} label="Löschfrist" />. Danach werden die Anfragen gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
+      </div>
+
+      <div>
+        <h2>4. Cookies und lokale Speicherung</h2>
+        <p>Der öffentliche Teil dieser Website setzt keine Cookies und verwendet keine Analyse- oder Werbedienste.</p>
+        <p>Nur im passwortgeschützten Verwaltungsbereich wird nach der Anmeldung ein Sitzungsschlüssel im lokalen Speicher des Browsers abgelegt. Dies ist für die Anmeldung technisch erforderlich (§ 25 Abs. 2 TDDDG).</p>
+      </div>
+
+      <div>
+        <h2>5. Schriftarten</h2>
+        <p>Die verwendeten Schriftarten sind lokal auf unserem Server eingebunden. Es wird keine Verbindung zu Servern von Google oder anderen Schriftanbietern aufgebaut.</p>
+      </div>
+
+      <div>
+        <h2>6. Ihre Rechte</h2>
+        <p>Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21 DSGVO). Wenden Sie sich dazu bitte an die oben genannte verantwortliche Stelle.</p>
+        <p>Sie haben außerdem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, z. B.: <Feld wert={r.aufsichtsbehoerde} label="zuständige Aufsichtsbehörde" />.</p>
+        <p>Eine automatisierte Entscheidungsfindung einschließlich Profiling findet nicht statt.</p>
+      </div>
+
+      <div>
+        <h2>7. Stand</h2>
+        <p><Feld wert={r.stand} label="Monat und Jahr" /></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,135 @@
+---
+// АДМИН-ПАНЕЛЬ (/admin/). Отдельно от публичного сайта.
+// Вся логика – в src/admin/admin.js, дизайн – в src/admin/admin.css.
+// Защита: доступ к заявкам проверяет сама база данных (RLS),
+// а не только эта страница.
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/500-italic.css';
+import '@fontsource-variable/jost';
+import '../../styles/global.css';
+import '../../admin/admin.css';
+import { statusListe } from '../../data/unterricht.js';
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Anfragen · Verwaltung</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="admin-body">
+
+    <!-- Загрузка -->
+    <div class="login-wrap" data-view="laden">
+      <p>Wird geladen …</p>
+    </div>
+
+    <!-- Вход -->
+    <div class="login-wrap" data-view="login" hidden>
+      <div class="form-card login-card">
+        <p class="eyebrow">Verwaltung</p>
+        <h1>Anmelden</h1>
+        <div class="alert alert-error" role="alert" hidden data-login-error></div>
+        <form class="form" data-login-form novalidate>
+          <div class="field">
+            <label for="login-email">E-Mail</label>
+            <input class="input" id="login-email" name="email" type="email" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label for="login-pass">Passwort</label>
+            <input class="input" id="login-pass" name="password" type="password" autocomplete="current-password" required />
+          </div>
+          <button class="btn" type="submit" data-login-btn><span class="spinner" aria-hidden="true"></span><span>Anmelden</span></button>
+        </form>
+        <p style="font-size:.85rem;color:var(--ink-soft);text-align:center"><a class="text-link" href="/">Zur Website</a></p>
+      </div>
+    </div>
+
+    <!-- Панель -->
+    <div data-view="panel" hidden>
+      <header class="admin-top">
+        <div class="container">
+          <span class="admin-brand">Elan <small>Verwaltung</small></span>
+          <div class="admin-user">
+            <span data-user-email></span>
+            <button class="btn btn-small" type="button" data-logout>Abmelden</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <div class="container">
+          <div class="admin-head">
+            <h1>Anfragen <span class="badge-new" data-new-badge hidden></span></h1>
+            <div class="admin-refresh">
+              <span class="live-dot" data-live>Live</span>
+              <span data-updated></span>
+              <button class="btn btn-outline btn-small" type="button" data-reload>Aktualisieren</button>
+            </div>
+          </div>
+
+          <div class="alert alert-error" role="alert" hidden data-panel-error></div>
+
+          <div class="toolbar">
+            <div class="tabs" role="group" aria-label="Nach Status filtern">
+              <button class="tab" type="button" data-filter="alle" aria-pressed="true">Alle <span class="count" data-count="alle"></span></button>
+              {statusListe.map((s) => (
+                <button class="tab" type="button" data-filter={s.value} aria-pressed="false">{s.label} <span class="count" data-count={s.value}></span></button>
+              ))}
+            </div>
+            <input class="input search" type="search" placeholder="Suchen: Name, E-Mail, Telefon, Nummer …" aria-label="Anfragen durchsuchen" data-search />
+          </div>
+
+          <div class="list" data-list></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Подробности заявки -->
+    <dialog class="panel" data-detail aria-labelledby="detail-title">
+      <div class="panel-inner">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow" data-detail-code></p>
+            <h2 id="detail-title" data-detail-name></h2>
+          </div>
+          <button class="panel-close" type="button" aria-label="Schließen" data-close>×</button>
+        </div>
+        <dl class="details" data-detail-fields></dl>
+        <div class="actions">
+          <p class="actions-label">Status ändern (aktuell: <strong data-detail-status></strong>)</p>
+          <div class="action-grid">
+            <button class="btn btn-ok" type="button" data-set-status="bestaetigt">✓ Bestätigen</button>
+            <button class="btn btn-warn" type="button" data-set-status="abgelehnt">✕ Ablehnen</button>
+            <button class="btn btn-outline" type="button" data-set-status="in_bearbeitung">In Bearbeitung</button>
+            <button class="btn btn-outline" type="button" data-set-status="abgeschlossen">Abgeschlossen</button>
+          </div>
+          <button class="btn btn-outline btn-small" type="button" data-set-status="neu" style="justify-self:start">Wieder als „Neu“ markieren</button>
+        </div>
+        <div class="danger-zone">
+          <button class="btn btn-small" type="button" data-delete>Anfrage löschen …</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Подтверждение удаления -->
+    <dialog class="panel" data-confirm style="width:min(100% - 1.5rem, 440px)" aria-labelledby="confirm-title">
+      <div class="panel-inner">
+        <h2 id="confirm-title" style="font-size:1.8rem">Anfrage wirklich löschen?</h2>
+        <p>Die Anfrage von <strong data-confirm-name></strong> wird endgültig gelöscht. Das kann nicht rückgängig gemacht werden.</p>
+        <div class="action-grid">
+          <button class="btn btn-outline" type="button" data-confirm-no>Abbrechen</button>
+          <button class="btn btn-danger" type="button" data-confirm-yes>Ja, löschen</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toasts" aria-live="polite" data-toasts></div>
+
+    <script>
+      import '../../admin/admin.js';
+    </script>
+  </body>
+</html>

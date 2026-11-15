@@ -1,0 +1,21 @@
+# Abhängigkeiten und fertige Builds
+node_modules/
+dist/
+.astro/
+
+# Geheime Einstellungen – niemals hochladen!
+.env
+.env.*
+!.env.example
+
+# Supabase CLI (lokal)
+supabase/.temp/
+supabase/.branches/
+
+# System / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
+npm-debug.log*

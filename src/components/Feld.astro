@@ -1,0 +1,6 @@
+---
+// Показывает значение из src/data/rechtliches.js или kontakt.js.
+// Если значение пустое – выводит жёлтую пометку [BITTE ERGÄNZEN: …].
+const { wert, label } = Astro.props;
+---
+{wert ? <Fragment>{wert}</Fragment> : <em class="todo">[BITTE ERGÄNZEN: {label}]</em>}

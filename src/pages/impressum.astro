@@ -1,0 +1,60 @@
+---
+// IMPRESSUM. Данные – в src/data/rechtliches.js и src/data/kontakt.js.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Feld from '../components/Feld.astro';
+import { rechtliches as r } from '../data/rechtliches.js';
+import { kontakt } from '../data/kontakt.js';
+---
+<BaseLayout title="Impressum" noindex={r.entwurf}>
+  <PageHero title="Impressum" />
+  <section class="section" style="padding-top:0">
+    <div class="container-narrow legal">
+      {r.entwurf && (
+        <p class="draft-banner"><strong>Entwurf:</strong> Diese Seite ist noch nicht vollständig. Gelb markierte Angaben müssen vor der Veröffentlichung ergänzt und rechtlich geprüft werden.</p>
+      )}
+
+      <div>
+        <h2>Angaben gemäß § 5 DDG</h2>
+        <p>
+          <Feld wert={r.betreiber} label="Name der Betreiberin / des Betreibers" /><br />
+          {r.rechtsform !== null && <><Feld wert={r.rechtsform} label="Rechtsform" /><br /></>}
+          <Feld wert={r.strasse} label="Straße und Hausnummer" /><br />
+          <Feld wert={r.plzOrt} label="PLZ und Ort" />
+        </p>
+      </div>
+
+      {r.vertreten !== null && (
+        <div><h2>Vertreten durch</h2><p><Feld wert={r.vertreten} label="Vertretungsberechtigte Person" /></p></div>
+      )}
+
+      <div>
+        <h2>Kontakt</h2>
+        <p>
+          Telefon: <Feld wert={kontakt.telefon} label="Telefonnummer (src/data/kontakt.js)" /><br />
+          E-Mail: <Feld wert={kontakt.email} label="E-Mail-Adresse (src/data/kontakt.js)" />
+        </p>
+      </div>
+
+      {r.register !== null && (
+        <div><h2>Registereintrag</h2><p><Feld wert={r.register} label="Registergericht und Registernummer" /></p></div>
+      )}
+
+      {r.ustId !== null && (
+        <div><h2>Umsatzsteuer-ID</h2><p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: <Feld wert={r.ustId} label="USt-IdNr." /></p></div>
+      )}
+
+      {r.inhaltlichVerantwortlich !== null && (
+        <div>
+          <h2>Verantwortlich für den Inhalt</h2>
+          <p><Feld wert={r.inhaltlichVerantwortlich} label="Name und Anschrift" /></p>
+        </div>
+      )}
+
+      <div>
+        <h2>Verbraucherstreitbeilegung</h2>
+        <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

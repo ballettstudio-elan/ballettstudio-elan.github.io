@@ -1,0 +1,33 @@
+---
+// СТРАНИЦА ЗАПИСИ (Probestunde / Unterrichtsanfrage).
+// Сама форма – в src/components/AnfrageForm.astro.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import { unterrichtSeite } from '../data/unterricht.js';
+---
+<BaseLayout title="Probestunde anfragen" description="Fragen Sie online eine Probestunde im Ballettunterricht bei BalletStudio „Elan“ an.">
+  <PageHero
+    eyebrow="Online-Anfrage"
+    title="Probestunde anfragen"
+    lead="Senden Sie uns Ihre Anfrage für eine Probestunde. Wir melden uns persönlich bei Ihnen."
+  />
+  <section class="section" style="padding-top:0">
+    <div class="container-narrow">
+      <AnfrageForm modus="buchung" />
+    </div>
+  </section>
+  <section class="section section-blush">
+    <div class="container">
+      <div class="section-head center">
+        <p class="eyebrow">Ablauf</p>
+        <h2>Wie geht es weiter?</h2>
+      </div>
+      <ol class="steps">
+        {unterrichtSeite.ablauf.map((s) => (
+          <li class="step reveal"><h3>{s.titel}</h3><p>{s.text}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
